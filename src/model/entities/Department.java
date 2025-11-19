@@ -29,17 +29,13 @@ public class Department implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return "Id: " + id + ", Name: " + name; 
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -56,4 +52,11 @@ public class Department implements Serializable {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Department [id=" + id + ", name=" + name + "]";
+    }
+
+
 }
