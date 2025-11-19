@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -90,6 +93,50 @@ public class SellerDAOJDBC implements SellerDAO {
     @Override
     public List<Seller> findAll() {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+
+    @Override
+    public List<Seller> findByDepartment(Department department) {
+        PreparedStatement sqlStatement = null;
+        ResultSet result = null; 
+
+        try {
+            sqlStatement = connection.prepareStatement("SELECT seller.*,department.name as DepName "
+                                                        + "FROM seller INNER JOIN department "
+                                                        + "ON seller.DepartmentId = department.Id "
+                                                        + "WHERE DepartmentId = ? "
+                                                        + "ORDER BY Name");
+
+            sqlStatement.setInt(1, department.getId());
+
+            result = sqlStatement.executeQuery();
+
+            List<Seller> sellers = new ArrayList<>();
+            Map<Integer, Department> departmentMap = new HashMap<>();
+
+            while (result.next()) {
+                Department dep = departmentMap.get(result.getInt("departmentid"));
+
+                if (dep == null) {
+                    dep = instantiateDepartment(result);
+                    departmentMap.put(result.getInt("departmentid"), dep);
+                }
+
+                Seller seller = instantiateSeller(result, dep);
+                sellers.add(seller);
+            }
+
+            return sellers;
+        }
+        catch (SQLException e)
+        {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(sqlStatement);
+            DB.closeResultSet(result);
+        }
+
     }
 
 }
