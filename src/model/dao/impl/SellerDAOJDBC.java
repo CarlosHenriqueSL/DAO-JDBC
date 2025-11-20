@@ -85,7 +85,7 @@ public class SellerDAOJDBC implements SellerDAO {
             sqlStatement.setInt(6, seller.getId());
 
             sqlStatement.executeUpdate();
-            
+
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
@@ -96,7 +96,24 @@ public class SellerDAOJDBC implements SellerDAO {
 
     @Override
     public void deleteById(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+        PreparedStatement sqlStatement = null;
+
+        try {
+            sqlStatement = connection.prepareStatement("DELETE FROM seller WHERE Id = ?");
+            sqlStatement.setInt(1, id);
+
+            int rowsAffected = sqlStatement.executeUpdate();
+
+            if (rowsAffected == 0){
+                throw new DbException("Unexpected error! No rows affected!");
+            }
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(sqlStatement);
+        }
     }
 
     @Override
