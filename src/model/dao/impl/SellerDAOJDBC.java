@@ -63,12 +63,35 @@ public class SellerDAOJDBC implements SellerDAO {
         finally {
             DB.closeStatement(sqlStatement);
         }
-
     }
     
     @Override
     public void update(Seller seller) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        PreparedStatement sqlStatement = null;
+
+        try {
+            sqlStatement = connection.prepareStatement(
+                                                    """
+                                                    UPDATE seller
+                                                    SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?
+                                                    WHERE Id = ?
+                                                    """);
+
+            sqlStatement.setString(1, seller.getName());
+            sqlStatement.setString(2, seller.getEmail());
+            sqlStatement.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
+            sqlStatement.setDouble(4, seller.getBaseSalary());
+            sqlStatement.setInt(5, seller.getDepartment().getId());
+            sqlStatement.setInt(6, seller.getId());
+
+            sqlStatement.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(sqlStatement);
+        }
     }
 
     @Override
