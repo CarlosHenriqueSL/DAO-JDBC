@@ -1,0 +1,48 @@
+package application;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import model.dao.DAOFactory;
+import model.dao.DepartmentDAO;
+import model.entities.Department;
+
+public class Program2 {
+    public static void main(String[] args) {
+    
+        Scanner input = new Scanner(System.in);
+
+        DepartmentDAO departmentDAO = DAOFactory.createDepartmentDAO();
+
+        System.out.println("=== TEST 1: department findById =====");
+        Department department = departmentDAO.findById(1);
+        System.out.println(department);
+
+        System.out.println("\n=== TEST 2: department findAll =====");
+        List<Department> departments = new ArrayList<>();
+        departments = departmentDAO.findAll();
+        for (Department obj : departments){
+            System.out.println(obj);
+        }
+
+        System.out.println("\n=== TEST 3: department insert =====");
+        Department newDepartment = new Department(null, "Music");
+        departmentDAO.insert(newDepartment);
+        System.out.println("Inserted! New id: " + newDepartment.getId());
+
+        System.out.println("\n=== TEST 4: department update =====");
+        department = departmentDAO.findById(1);
+        department.setName("Food");
+        departmentDAO.update(department);
+        System.out.println("Update completed!");
+
+        System.out.println("\n=== TEST 5: department delete =====");
+        System.out.println("Enter id for delete test: ");
+        int id = input.nextInt();
+        departmentDAO.deleteById(id);
+        System.out.println("Delete completed");
+
+        input.close();
+    }
+}

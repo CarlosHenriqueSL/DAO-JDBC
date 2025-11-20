@@ -147,7 +147,6 @@ public class SellerDAOJDBC implements SellerDAO {
             DB.closeStatement(sqlStatement);
             DB.closeResultSet(result);
         }
-
     }
 
     private Seller instantiateSeller(ResultSet result, Department department) throws SQLException {
