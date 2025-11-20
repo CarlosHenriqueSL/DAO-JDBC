@@ -3,6 +3,7 @@ package model.dao.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +26,46 @@ public class SellerDAOJDBC implements SellerDAO {
 
     @Override
     public void insert(Seller seller) {
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
-    }
+        PreparedStatement sqlStatement = null;
 
+        try {
+            sqlStatement = connection.prepareStatement(
+                                                    """
+                                                    INSERT INTO seller
+                                                        (Name, Email, BirthDate, BaseSalary, DepartmentId)
+                                                        VALUES
+                                                        (?, ?, ?, ?, ?)
+                                                    """, Statement.RETURN_GENERATED_KEYS);
+
+            sqlStatement.setString(1, seller.getName());
+            sqlStatement.setString(2, seller.getEmail());
+            sqlStatement.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
+            sqlStatement.setDouble(4, seller.getBaseSalary());
+            sqlStatement.setInt(5, seller.getDepartment().getId());
+
+            int rowsAffected = sqlStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet result = sqlStatement.getGeneratedKeys();
+                if (result.next()) {
+                    int id = result.getInt(1);
+                    seller.setId(id);
+                }
+
+                DB.closeResultSet(result);
+            }
+            else {
+                throw new DbException("Unexpected error! No rows affected!");
+            }
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(sqlStatement);
+        }
+
+    }
+    
     @Override
     public void update(Seller seller) {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
