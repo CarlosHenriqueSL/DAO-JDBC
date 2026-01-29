@@ -16,6 +16,10 @@ This project was developed as part of the Udemy course **"Java COMPLETO Programa
 - [Running the Application](#running-the-application)
 - [Project Structure](#project-structure)
 - [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
 ## 🔍 About
 
@@ -143,8 +147,10 @@ The project includes a `database.sql` file in the root directory. Execute this s
 #### Using psql command line:
 
 ```bash
-psql -U your_username -d coursejdbc -f database.sql
+psql -U postgres -d coursejdbc -f database.sql
 ```
+
+Replace `postgres` with your PostgreSQL username if different. You will be prompted for the password.
 
 #### Using pgAdmin:
 1. Open pgAdmin
@@ -160,11 +166,13 @@ Simply open the `database.sql` file and run all the SQL statements in your datab
 
 After running the script, verify that the tables were created:
 
-```sql
--- Check tables
-\dt  -- (in psql)
+**In psql command line:**
+```
+\dt
+```
 
--- Or use:
+**In any SQL client:**
+```sql
 SELECT * FROM department;
 SELECT * FROM seller;
 ```
@@ -227,9 +235,9 @@ If you want to use MySQL instead of PostgreSQL:
    ```
 
 3. **Modify `database.sql`** to use MySQL syntax:
-   - Change `SERIAL` to `INT AUTO_INCREMENT`
+   - Change `id SERIAL PRIMARY KEY` to `id INT AUTO_INCREMENT PRIMARY KEY`
    - Change `TIMESTAMP` to `DATETIME`
-   - Adjust data types as needed
+   - Adjust data types as needed for MySQL compatibility
 
 ## ▶️ Running the Application
 
@@ -269,8 +277,14 @@ The program will execute the following tests:
 If you prefer to run from the command line:
 
 ```bash
-# Compile the project
-javac -cp ".:lib/*" -d bin src/**/*.java
+# Create bin directory for compiled classes
+mkdir -p bin
+
+# Compile the project (on Linux/Mac)
+find src -name "*.java" | xargs javac -cp ".:lib/*" -d bin
+
+# Or compile with explicit package structure
+javac -cp ".:lib/*" -d bin src/db/*.java src/model/entities/*.java src/model/dao/*.java src/model/dao/impl/*.java src/application/*.java
 
 # Run Program (Seller operations)
 java -cp "bin:lib/*" application.Program
