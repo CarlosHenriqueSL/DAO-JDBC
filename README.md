@@ -410,18 +410,9 @@ Contributions are welcome! If you'd like to improve this project:
 5. Push to the branch (`git push origin feature/improvement`)
 6. Open a Pull Request
 
-## 📝 License
-
-This project is open source and available for educational purposes.
-
-## 👨‍💻 Author
-
-**Carlos Henrique SL**
-
 ## 🙏 Acknowledgments
 
 - Course: "Java COMPLETO Programação Orientada a Objetos + Projetos" on Udemy
-- Thanks to all contributors and the Java community
 
 ---
 
